@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Todays Excerpt",
+  "schemaVersion": 1,
+  "description": "Daily literary excerpt — uplifting or nature poem, under 15 lines. Dark brown theme. Baked in at morning refresh.",
+  "mcpTools": [],
+  "mcpServerNames": []
+}
+</script>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Today's Excerpt</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #1C1410;
+    color: #EDE0CC;
+    padding: 0;
+    width: 100%;
+  }
+
+  .widget-header {
+    background: #2A1C12;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    border-bottom: 1px solid #3D2A1A;
+  }
+  .widget-header-dot { width: 8px; height: 8px; border-radius: 50%; background: #A07850; flex-shrink: 0; }
+  .widget-header-title {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    letter-spacing: 0.06em;
+    color: #EDE0CC;
+  }
+  .widget-header-date {
+    margin-left: auto;
+    font-family: Georgia, serif;
+    font-size: 10px;
+    font-style: italic;
+    color: #A07850;
+  }
+
+  .widget-body {
+    background: #1C1410;
+    padding: 22px 24px;
+    width: 100%;
+  }
+
+  .excerpt-title {
+    font-family: Georgia, serif;
+    font-size: 13px;
+    font-weight: bold;
+    color: #EDE0CC;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .excerpt-byline {
+    font-family: Georgia, serif;
+    font-size: 11px;
+    font-style: italic;
+    color: #A07850;
+    margin-bottom: 20px;
+  }
+
+  .excerpt-body {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 14px;
+    line-height: 2.1;
+    color: #D8CCB8;
+    font-style: italic;
+    white-space: pre-wrap;
+    border-left: 2px solid #5A3A20;
+    padding-left: 18px;
+    margin-bottom: 18px;
+  }
+
+  .excerpt-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .excerpt-source {
+    font-family: Georgia, serif;
+    font-size: 10px;
+    font-style: italic;
+    color: #7A6A50;
+    flex: 1;
+  }
+
+  .excerpt-link {
+    font-family: Georgia, serif;
+    font-size: 10px;
+    font-style: italic;
+    color: #A07850;
+    text-decoration: none;
+  }
+  .excerpt-link:hover { text-decoration: underline; color: #C09860; }
+
+  .empty-state {
+    font-family: Georgia, serif;
+    font-size: 13px;
+    font-style: italic;
+    color: #5A4A38;
+    padding: 24px 0;
+    text-align: center;
+  }
+
+  .status-bar {
+    font-family: Georgia, serif;
+    font-size: 10px;
+    font-style: italic;
+    color: #5A4A38;
+    text-align: right;
+    padding: 6px 0 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="widget-header">
+  <div class="widget-header-dot"></div>
+  <span class="widget-header-title">Today's Excerpt</span>
+  <span class="widget-header-date" id="headerDate"></span>
+</div>
+<div class="widget-body" id="widgetBody">
+  <div class="empty-state">Loading…</div>
+</div>
+<div class="status-bar" id="statusBar"></div>
+
+<script>
+const BAKED_LITERARY = {"date":"2026-06-21","title":"from \"Catalog of Unabashed Gratitude\"","poet":"Ross Gay","source":"Poetry Foundation","url":"https://www.poetryfoundation.org/poems/58762/catalog-of-unabashed-gratitude","text":"Friends, will you bear with me today,\nfor I have awakened\nfrom a dream in which a robin\nmade with its shabby wings a kind of veil\nbehind which it shimmied and stomped something from the south\nof Spain, its breast aflame,\nlooking me dead in the eye\nfrom the branch that grew into my window—\nand who among us could ignore such odd\nand precise counsel?"};
+
+function main() {
+  const body = document.getElementById('widgetBody');
+  const statusEl = document.getElementById('statusBar');
+  const dateEl = document.getElementById('headerDate');
+  const data = BAKED_LITERARY;
+
+  if (!data?.text) { body.innerHTML=`<div class="empty-state">No excerpt today — refreshes each morning.</div>`; return; }
+
+  if (data.date) {
+    const d = new Date(data.date+'T12:00:00');
+    dateEl.textContent = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  }
+
+  body.innerHTML = `
+    <div class="excerpt-title">${data.title??'Untitled'}</div>
+    <div class="excerpt-byline">${data.poet??''}</div>
+    <div class="excerpt-body">${data.text}</div>
+    <div class="excerpt-footer">
+      <div class="excerpt-source">${data.source??''}</div>
+      ${data.url?`<a class="excerpt-link" href="${data.url}" target="_blank">full poem →</a>`:''}
+    </div>`;
+
+  statusEl.textContent = `${new Date(data.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})} · Refreshes each morning`;
+}
+main();
+</script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "New And Good",
+  "schemaVersion": 1,
+  "description": "Daily uplifting content — Academia, Bellingham, Good News, YouTube embed. Dark brown theme. Content baked in at morning refresh time.",
+  "mcpTools": [],
+  "mcpServerNames": []
+}
+</script>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New + Good</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #1C1410;
+    color: #EDE0CC;
+    padding: 0;
+    width: 100%;
+  }
+
+  .widget-header {
+    background: #2A1C12;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    border-bottom: 1px solid #3D2A1A;
+  }
+  .widget-header-dot { width: 8px; height: 8px; border-radius: 50%; background: #A07850; flex-shrink: 0; }
+  .widget-header-title {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    letter-spacing: 0.06em;
+    color: #EDE0CC;
+  }
+  .widget-header-date {
+    margin-left: auto;
+    font-family: Georgia, serif;
+    font-size: 10px;
+    font-style: italic;
+    color: #A07850;
+  }
+
+  .widget-body {
+    background: #1C1410;
+    padding: 14px;
+    width: 100%;
+  }
+
+  .card-list { display: flex; flex-direction: column; gap: 10px; }
+
+  /* Category color tokens — warm on dark */
+  .cat-Academia   { --cc: #9B7FD4; --cb: #2A2040; --ct: #C8B8F0; }
+  .cat-Bellingham { --cc: #6A9F50; --cb: #1A2A14; --ct: #A8D890; }
+  .cat-Good-News  { --cc: #8AAF62; --cb: #1C2A10; --ct: #C0E090; }
+  .cat-YouTube    { --cc: #C06050; --cb: #2A1510; --ct: #F0B8A8; }
+
+  .card {
+    background: #241810;
+    border: 1px solid #3D2A1A;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+
+  .cat-pill {
+    font-family: Georgia, serif;
+    font-size: 9px;
+    font-style: italic;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--cb);
+    color: var(--ct);
+    border: 1px solid var(--cc);
+    flex-shrink: 0;
+    margin-top: 2px;
+    white-space: nowrap;
+    opacity: 0.9;
+  }
+
+  .card-body { flex: 1; min-width: 0; }
+
+  h4.card-headline {
+    font-family: Georgia, serif;
+    font-size: 13px;
+    font-weight: bold;
+    color: #EDE0CC;
+    line-height: 1.35;
+    margin-bottom: 5px;
+  }
+
+  .card-summary {
+    font-family: Georgia, serif;
+    font-size: 11px;
+    font-style: italic;
+    color: #B8A890;
+    line-height: 1.6;
+  }
+
+  .card-source {
+    font-family: Georgia, serif;
+    font-size: 9px;
+    color: #7A6A50;
+    margin-top: 5px;
+    font-style: italic;
+  }
+
+  .card-link {
+    display: inline-block;
+    font-family: Georgia, serif;
+    font-size: 10px;
+    color: var(--cc);
+    margin-top: 6px;
+    text-decoration: none;
+    font-style: italic;
+  }
+  .card-link:hover { text-decoration: underline; }
+
+  .yt-embed {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: none;
+    display: block;
+    background: #0A0806;
+    border-radius: 0 0 9px 9px;
+  }
+
+  .empty-state {
+    background: #241810;
+    border: 1px solid #3D2A1A;
+    border-radius: 10px;
+    padding: 24px 16px;
+    text-align: center;
+  }
+
+  h4.empty-title {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: italic;
+    color: #7A6A50;
+  }
+
+  .status-bar {
+    font-family: Georgia, serif;
+    font-size: 10px;
+    font-style: italic;
+    color: #5A4A38;
+    text-align: right;
+    padding: 6px 0 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="widget-header">
+  <div class="widget-header-dot"></div>
+  <span class="widget-header-title">New + Good</span>
+  <span class="widget-header-date" id="headerDate"></span>
+</div>
+<div class="widget-body">
+  <div id="contentArea">
+    <div class="empty-state"><h4 class="empty-title">Loading…</h4></div>
+  </div>
+</div>
+<div class="status-bar" id="statusBar"></div>
+
+<script>
+const BAKED_DATA = {"updated":"2026-06-21T19:00:00Z","date":"2026-06-21","items":[{"category":"Academia","headline":"CCC 2027 CFP: 'Writing Pedagogy as Intellectual Fun, Emergence, and Joy'","summary":"College Composition and Communication's 2027 special issue calls for work on joy, play, and emergence in writing pedagogy — multimodal, AI, and composition scholarship welcome.","url":"https://wpa-announcements.tracigardner.com/2026/05/14/cfp-ccc-2027-special-issue-writing-pedagogy-as-intellectual-fun-emergence-and-joy/","source":"WPA Announcements / NCTE"},{"category":"Bellingham","headline":"As Spring Chinook Return, Lummi Nation Reflects on Hard-Fought Salmon Comeback","summary":"Spring chinook returning to the Nooksack in stronger numbers. A conservation milestone — years of advocacy and habitat restoration quietly paying off.","url":"https://www.cascadiadaily.com/2026/jun/18/as-spring-chinook-return-lummi-nation-reflects-on-hard-fought-salmon-comeback/","source":"Cascadia Daily News"},{"category":"Good News","headline":"LEGO Foundation Commits $97M to Play-Based Education for Children in Conflict Zones","summary":"Partnering with the IRC to bring structured play-based learning to 1.5 million displaced children across global programs.","url":"https://www.goodgoodgood.co/articles/good-news-this-week-june-06-2026","source":"Good Good Good"},{"category":"YouTube","headline":"Relaxing Nature: Pacific Northwest 4K","summary":"Old-growth forest, mossy trails, coastal light. A quiet visual break.","url":"https://www.youtube.com/watch?v=SPTalNRl9GU","source":"Pierre Leclerc Photography"}]};
+
+const CAT_CLASS = { 'Academia':'cat-Academia','Bellingham':'cat-Bellingham','Good News':'cat-Good-News','YouTube':'cat-YouTube' };
+const CAT_LABEL = { 'Academia':'Academia','Bellingham':'Bellingham','Good News':'Good News','YouTube':'Watch' };
+
+function ytVideoId(url) {
+  if (!url) return null;
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+function renderItems(data) {
+  const el = document.getElementById('contentArea');
+  const dateEl = document.getElementById('headerDate');
+  if (data.date) {
+    const d = new Date(data.date+'T12:00:00');
+    dateEl.textContent = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  }
+  const items = (data.items||[]).filter(i => i.category !== 'Literary');
+  if (!items.length) { el.innerHTML=`<div class="empty-state"><h4 class="empty-title">Nothing yet today</h4></div>`; return; }
+
+  el.innerHTML=`<div class="card-list">${items.map(item=>{
+    const cls=CAT_CLASS[item.category]??'cat-Good-News';
+    const label=CAT_LABEL[item.category]??item.category;
+    const isYT=item.category==='YouTube';
+    const videoId=isYT?ytVideoId(item.url):null;
+    if (isYT && videoId) return `<div class="card ${cls}">
+      <div class="card-top">
+        <div class="cat-pill">${label}</div>
+        <div class="card-body"><h4 class="card-headline">${item.headline}</h4><div class="card-summary">${item.summary??''}</div></div>
+      </div>
+      <iframe class="yt-embed" src="https://www.youtube.com/embed/${videoId}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>`;
+    return `<div class="card ${cls}">
+      <div class="card-top">
+        <div class="cat-pill">${label}</div>
+        <div class="card-body">
+          <h4 class="card-headline">${item.headline}</h4>
+          <div class="card-summary">${item.summary??''}</div>
+          <div class="card-source">${item.source??''}</div>
+          ${item.url?`<a class="card-link" href="${item.url}" target="_blank">Read more →</a>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function main() {
+  renderItems(BAKED_DATA);
+  const updated = BAKED_DATA.updated ? new Date(BAKED_DATA.updated).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}) : '—';
+  document.getElementById('statusBar').textContent = `${updated} · Refreshes each morning`;
+}
+main();
+</script>
+</body>
+</html>
