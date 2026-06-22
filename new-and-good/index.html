@@ -198,7 +198,7 @@ function renderItems(data) {
     const d = new Date(data.date + 'T12:00:00');
     dateEl.textContent = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
   }
-  const items = (data.items || []).filter(i => i.category !== 'Literary');
+  const items = (data.items || []).filter(i => i.category !== 'Literary' && i.category !== 'YouTube');
   if (!items.length) { el.innerHTML = `<div class="empty-state">Nothing yet today — refreshes each morning.</div>`; return; }
 
   el.innerHTML = `<div class="card-list">${items.map(item => {
@@ -249,7 +249,4 @@ function main() {
   const dateStr = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
   document.getElementById('statusBar').textContent = `${dateStr} · Refreshes each morning`;
 }
-main();
-</script>
-</body>
-</html>
+main()

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Watch",
+  "schemaVersion": 1,
+  "description": "Daily YouTube pick — nature, ambient, Pacific Northwest. Option B Sage & Stone theme. Standalone widget, separate from New + Good.",
+  "mcpTools": [],
+  "mcpServerNames": []
+}
+</script>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watch</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #2E3D34;
+    color: #FFFFFF;
+    padding: 0;
+    width: 100%;
+  }
+
+  .widget-header {
+    background: #38503E;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    border-bottom: 1px solid #4A6650;
+  }
+  .widget-header-dot { width: 8px; height: 8px; border-radius: 50%; background: #F5D060; flex-shrink: 0; }
+  .widget-header-title {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    letter-spacing: 0.06em;
+    color: #FFFFFF;
+  }
+  .widget-header-date {
+    margin-left: auto;
+    font-family: Georgia, serif;
+    font-size: 10px;
+    font-style: italic;
+    color: #5EE8A0;
+  }
+
+  .widget-body {
+    background: #2E3D34;
+    padding: 14px;
+    width: 100%;
+  }
+
+  .card {
+    background: #1A2620;
+    border: 1px solid #2A3A30;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .card-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px 10px;
+  }
+
+  .cat-pill {
+    font-family: Georgia, serif;
+    font-size: 9px;
+    font-style: italic;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: #FFFFFF;
+    color: #805000;
+    border: 1.5px solid #F5D060;
+    flex-shrink: 0;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+
+  .card-body { flex: 1; min-width: 0; }
+
+  h4.card-headline {
+    font-family: Georgia, serif;
+    font-size: 13px;
+    font-weight: bold;
+    color: #FFFFFF;
+    line-height: 1.35;
+    margin-bottom: 6px;
+  }
+
+  .card-summary {
+    font-family: Georgia, serif;
+    font-size: 11px;
+    font-style: italic;
+    color: #A0B8A8;
+    line-height: 1.7;
+    margin-bottom: 4px;
+  }
+
+  .card-source {
+    font-family: Georgia, serif;
+    font-size: 9px;
+    color: #6A8870;
+    font-style: italic;
+    margin-bottom: 2px;
+  }
+
+  .card-link {
+    display: inline-block;
+    font-family: Georgia, serif;
+    font-size: 10px;
+    font-style: italic;
+    color: #F5D060;
+    margin-top: 4px;
+    text-decoration: none;
+  }
+  .card-link:hover { text-decoration: underline; }
+
+  .yt-embed {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: none;
+    display: block;
+    background: #0A0A0A;
+  }
+
+  .empty-state {
+    background: #1A2620;
+    border: 1px solid #2A3A30;
+    border-radius: 10px;
+    padding: 24px 16px;
+    text-align: center;
+    font-family: Georgia, serif;
+    font-size: 13px;
+    font-style: italic;
+    color: #4A6A50;
+  }
+
+  .status-bar {
+    font-family: Georgia, serif;
+    font-size: 10px;
+    font-style: italic;
+    color: #4A6A50;
+    text-align: right;
+    padding: 6px 14px 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="widget-header">
+  <div class="widget-header-dot"></div>
+  <span class="widget-header-title">Watch</span>
+  <span class="widget-header-date" id="headerDate"></span>
+</div>
+<div class="widget-body">
+  <div id="contentArea">
+    <div class="empty-state">Loading…</div>
+  </div>
+</div>
+<div class="status-bar" id="statusBar"></div>
+
+<script>
+const BAKED_DATA = {"updated":"2026-06-22T05:15:00Z","date":"2026-06-22","items":[{"category":"YouTube","headline":"Relaxing Nature: Pacific Northwest 4K","summary":"A slow, meditative walk through old-growth forest, mossy river trails, and Pacific coastal light — filmed in 4K by Pierre Leclerc. A quiet visual break perfect for working hours or winding down. No narration, just ambient forest sound and water.","url":"https://www.youtube.com/watch?v=SPTalNRl9GU","source":"Pierre Leclerc Photography"}]};
+
+function ytVideoId(url) {
+  if (!url) return null;
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+function main() {
+  const el = document.getElementById('contentArea');
+  const dateEl = document.getElementById('headerDate');
+  const statusEl = document.getElementById('statusBar');
+
+  const item = (BAKED_DATA.items || []).find(i => i.category === 'YouTube');
+  if (BAKED_DATA.date) {
+    const d = new Date(BAKED_DATA.date + 'T12:00:00');
+    const dateStr = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    dateEl.textContent = dateStr;
+    statusEl.textContent = `${dateStr} · Refreshes each morning`;
+  }
+
+  if (!item) { el.innerHTML = `<div class="empty-state">No video today — refreshes each morning.</div>`; return; }
+
+  const videoId = ytVideoId(item.url);
+
+  el.innerHTML = `
+    <div class="card">
+      <div class="card-info">
+        <div class="cat-pill">Watch</div>
+        <div class="card-body">
+          <h4 class="card-headline">${item.headline}</h4>
+          <div class="card-summary">${item.summary ?? ''}</div>
+          <div class="card-source">${item.source ?? ''}</div>
+          ${item.url ? `<a class="card-link" href="${item.url}" target="_blank">Watch on YouTube →</a>` : ''}
+        </div>
+      </div>
+      ${videoId ? `<iframe class="yt-embed" src="https://www.youtube.com/embed/${videoId}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` : ''}
+    </div>`;
+}
+main();
+</script>
+</body>
+</html>
